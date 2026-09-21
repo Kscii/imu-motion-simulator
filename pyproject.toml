@@ -1,0 +1,67 @@
+[build-system]
+requires = ["hatchling==1.27.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "imu-motion-simulator"
+version = "0.1.0"
+description = "Motion-capture processing and synthetic IMU research tools"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Kscii" }]
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "numpy==2.2.6",
+    "h5py==3.14.0",
+    "scipy==1.16.3",
+    "rich>=14,<15",
+    "pyyaml>=6,<7",
+]
+
+[project.scripts]
+imu-sim = "imu_motion_simulator.cli:main"
+
+[project.optional-dependencies]
+control = [
+    "fastapi>=0.116,<1",
+    "uvicorn>=0.35,<1",
+]
+cloud = ["google-cloud-storage==3.13.1"]
+motion = [
+    "ezc3d==1.7.2",
+    "smplx==0.1.28",
+    "torch==2.13.0+cpu",
+]
+
+[project.urls]
+Homepage = "https://github.com/Kscii/imu-motion-simulator"
+Repository = "https://github.com/Kscii/imu-motion-simulator"
+Issues = "https://github.com/Kscii/imu-motion-simulator/issues"
+
+[dependency-groups]
+dev = [
+    "fastapi>=0.116,<1",
+    "httpx>=0.28,<1",
+    "pytest==8.4.2",
+]
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.hatch.build]
+exclude = [
+    "/.git",
+    "/.venv",
+    "/.pytest_cache",
+    "**/__pycache__",
+    "**/*.pyc",
+]

@@ -1,0 +1,61 @@
+{
+  "schema": "imu_motion_simulator.source_catalog.v1",
+  "catalog_id": "prepared-research-sources-v1",
+  "sources": [
+    {
+      "id": "amass-accad-smplh-g",
+      "dataset": "AMASS-ACCAD",
+      "kind": "amass",
+      "path": "datasets/amass/smplh-g/ACCAD.tar.bz2",
+      "source_url": "https://amass.is.tue.mpg.de/download.php",
+      "license_url": "https://amass.is.tue.mpg.de/license.html",
+      "observed_scope": "AMASS non-commercial research; no third-party redistribution"
+    },
+    {
+      "id": "babel-v1.0",
+      "dataset": "BABEL",
+      "kind": "babel",
+      "amass_source_id": "amass-accad-smplh-g",
+      "path": "datasets/babel/v1.0/babel_v1-0_release.zip",
+      "source_url": "https://babel.is.tue.mpg.de/download.php",
+      "license_url": "https://babel.is.tue.mpg.de/license.html",
+      "observed_scope": "BABEL non-commercial research; no third-party redistribution"
+    },
+    {
+      "id": "lafan1",
+      "dataset": "LAFAN1",
+      "kind": "zip",
+      "path": "datasets/lafan1/94084601bacdf9cc3764b5c73daaeccae6035fac/lafan1.zip",
+      "source_url": "https://github.com/ubisoft/ubisoft-laforge-animation-dataset",
+      "license_url": "https://github.com/ubisoft/ubisoft-laforge-animation-dataset/blob/master/license.txt",
+      "observed_scope": "CC-BY-NC-ND-4.0; derivatives not authorized for sharing"
+    },
+    {
+      "id": "accad-bvh",
+      "dataset": "ACCAD-original",
+      "kind": "zip",
+      "path": "datasets/accad/quickwalk/original/quickwalk_BVH.zip",
+      "source_url": "https://accad.osu.edu/research/motion-lab/mocap-system-and-data",
+      "license_url": "https://accad.osu.edu/research/motion-lab/mocap-system-and-data",
+      "observed_scope": "CC-BY-3.0 listed by official Open Motion Project; source attribution required"
+    },
+    {
+      "id": "accad-amc",
+      "dataset": "ACCAD-original",
+      "kind": "zip",
+      "path": "datasets/accad/quickwalk/original/quickwalk_AMC.zip",
+      "source_url": "https://accad.osu.edu/research/motion-lab/mocap-system-and-data",
+      "license_url": "https://accad.osu.edu/research/motion-lab/mocap-system-and-data",
+      "observed_scope": "CC-BY-3.0 listed by official Open Motion Project; source attribution required"
+    },
+    {
+      "id": "accad-c3d",
+      "dataset": "ACCAD-original",
+      "kind": "zip",
+      "path": "datasets/accad/quickwalk/original/quickwalk_C3D.zip",
+      "source_url": "https://accad.osu.edu/research/motion-lab/mocap-system-and-data",
+      "license_url": "https://accad.osu.edu/research/motion-lab/mocap-system-and-data",
+      "observed_scope": "CC-BY-3.0 listed by official Open Motion Project; source attribution required"
+    }
+  ]
+}

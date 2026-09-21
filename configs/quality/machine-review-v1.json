@@ -1,0 +1,18 @@
+{
+  "schema": "imu_motion_simulator.machine_review_policy.v1",
+  "policy_id": "machine-review-v1",
+  "minimum_corpus_pass_rate": 0.8,
+  "minimum_source_pass_rate": 0.8,
+  "paused_sources": [],
+  "required_checks": [
+    "structure",
+    "trajectory",
+    "sensor",
+    "work_grid_convergence"
+  ],
+  "convergence": {
+    "require_boundary_guard_complete": true,
+    "acceleration_rms_max_m_s2": 0.1,
+    "angular_velocity_rms_max_rad_s": 0.02
+  }
+}

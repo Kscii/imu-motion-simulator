@@ -1,0 +1,19 @@
+{
+  "schema": "imu_motion_simulator.bvh_mapping.v1",
+  "adapter_id": "lafan1-bvh-v1",
+  "description": "Representative LAFAN1 Y-up-centimeter mapping with first-frame rest normalization",
+  "position_scale_m": 0.01,
+  "world_from_source_matrix": [[1.0, 0.0, 0.0], [0.0, 0.0, -1.0], [0.0, 1.0, 0.0]],
+  "joint_map": {
+    "Hips": "pelvis", "LeftUpLeg": "left_hip", "RightUpLeg": "right_hip",
+    "LeftLeg": "left_knee", "RightLeg": "right_knee",
+    "LeftFoot": "left_ankle", "RightFoot": "right_ankle",
+    "LeftToe": "left_foot", "RightToe": "right_foot",
+    "Spine": "spine1", "Spine1": "spine2", "Spine2": "spine3",
+    "Neck": "neck", "Head": "head",
+    "LeftShoulder": "left_collar", "RightShoulder": "right_collar",
+    "LeftArm": "left_shoulder", "RightArm": "right_shoulder",
+    "LeftForeArm": "left_elbow", "RightForeArm": "right_elbow",
+    "LeftHand": "left_wrist", "RightHand": "right_wrist"
+  }
+}

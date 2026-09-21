@@ -1,0 +1,10 @@
+{
+  "schema": "imu_motion_simulator.ideal_imu_profile.v2",
+  "profile_id": "ideal-25hz-v2",
+  "description": "Permanent ideal kinematic IMU: continuous cubic translation, rotational interpolation, 10 Hz zero-phase filter, 25 Hz output, and an explicit 0.2 s convergence guard at both source boundaries",
+  "output_hz": 25,
+  "work_hz": 240,
+  "lowpass_hz": 10.0,
+  "gravity_m_s2": 9.81,
+  "boundary_guard_s": 0.2
+}

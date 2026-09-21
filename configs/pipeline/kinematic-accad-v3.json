@@ -1,0 +1,48 @@
+{
+  "schema": "imu_motion_simulator.kinematic_plan.v1",
+  "study_id": "kinematic-accad-v3",
+  "description": "Pure-kinematic ACCAD stand, sway and first-step production thin slice with source-rate-aligned IMU convergence QA",
+  "inputs": {
+    "amass_archive": "datasets/amass/smplh-g/ACCAD.tar.bz2",
+    "smplh_archive": "models/smplh/original/smplh.tar.xz",
+    "dmpl_archive": "models/dmpl/original/dmpls.tar.xz"
+  },
+  "sensor": {
+    "layout": "configs/sensors/layouts/chest-1.json",
+    "profile": "configs/sensors/profiles/ideal-25hz-v3.json"
+  },
+  "review": {
+    "primary": "threejs",
+    "mp4": "on-demand",
+    "policy": "automatic-all-risk-stratified-human"
+  },
+  "clips": [
+    {
+      "id": "accad-stand",
+      "source_dataset": "ACCAD",
+      "source_member": "ACCAD/Male1General_c3d/General A1 - Stand_poses.npz",
+      "expected_gender": "male",
+      "expected_frames": 745,
+      "frame_range": [0, 457],
+      "label_candidates": [{"code": "stand", "origin": "curated-plan", "confidence": 1.0}]
+    },
+    {
+      "id": "accad-sway",
+      "source_dataset": "ACCAD",
+      "source_member": "ACCAD/Male1General_c3d/General A2 - Sway_poses.npz",
+      "expected_gender": "male",
+      "expected_frames": 1084,
+      "frame_range": [0, 360],
+      "label_candidates": [{"code": "sway", "origin": "curated-plan", "confidence": 1.0}]
+    },
+    {
+      "id": "accad-step",
+      "source_dataset": "ACCAD",
+      "source_member": "ACCAD/Female1Walking_c3d/B1 - stand to walk_poses.npz",
+      "expected_gender": "female",
+      "expected_frames": 747,
+      "frame_range": [0, 238],
+      "label_candidates": [{"code": "stand-to-walk", "origin": "curated-plan", "confidence": 1.0}]
+    }
+  ]
+}

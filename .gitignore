@@ -1,0 +1,19 @@
+# 大体积、受许可限制及可重建内容不默认进入代码仓库。
+/data/
+/artifacts/
+/runs/
+/records/
+/cache/
+/.cache/
+/.pytest_cache/
+/.venv/
+__pycache__/
+*.py[cod]
+*.partial
+.coverage
+/build/
+/dist/
+/*.egg-info/
+.env
+.env.*
+!.env.example

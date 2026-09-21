@@ -1,0 +1,38 @@
+{
+  "manifest_version": "public_acquisition_manifest_v1",
+  "plan_id": "research-inputs-v1",
+  "files": [
+    {
+      "id": "blender-4.5.13-linux-x64",
+      "path": "runtime/blender-4.5.13/blender-4.5.13-linux-x64.tar.xz",
+      "url": "https://download.blender.org/release/Blender4.5/blender-4.5.13-linux-x64.tar.xz",
+      "license_url": "https://www.blender.org/about/license/",
+      "bytes": 378033952,
+      "sha256": "da4e69b06b75b9e642d106496c50e7e240218b411d2f6e18271c1d1d819cef91"
+    },
+    {
+      "id": "lara-v2-00",
+      "path": "datasets/lara/5761276/README _ LARa Version 2.pdf",
+      "url": "https://zenodo.org/api/records/5761276/files/README%20_%20LARa%20Version%202.pdf/content",
+      "license_url": "https://zenodo.org/records/5761276",
+      "bytes": 3631796,
+      "md5": "955000bdc938b8ccc6888fddee3c9c7d"
+    },
+    {
+      "id": "lara-v2-03",
+      "path": "datasets/lara/5761276/IMU data (annotated) _ MbientLab.zip",
+      "url": "https://zenodo.org/api/records/5761276/files/IMU%20data%20(annotated)%20_%20MbientLab.zip/content",
+      "license_url": "https://zenodo.org/records/5761276",
+      "bytes": 627108809,
+      "md5": "6aecb8b8d557a2b6e61c7dfe164b28e8"
+    },
+    {
+      "id": "lara-v2-05",
+      "path": "datasets/lara/5761276/OMoCap data (annotated) _ csv, txt.zip",
+      "url": "https://zenodo.org/api/records/5761276/files/OMoCap%20data%20(annotated)%20_%20csv,%20txt.zip/content",
+      "license_url": "https://zenodo.org/records/5761276",
+      "bytes": 6946131917,
+      "md5": "f8c8a4fbe6d9d014de18d1011becdf3e"
+    }
+  ]
+}

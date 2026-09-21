@@ -1,0 +1,42 @@
+# 复制到 Ubuntu 的私有配置目录后修改路径；不要把原始数据或凭据提交到 Git。
+# 检查：imu-sim production validate job.yaml
+# 前台运行：imu-sim production run job.yaml
+# 后台控制 API：imu-sim production serve job.yaml（仅监听 127.0.0.1:8890）
+# 本机状态面板：imu-sim production dashboard job.yaml --port 8891
+schema: imu_motion_simulator.production_job.v1
+
+# 原始 AMASS/Stage-II 压缩档案及 SMPL+H、DMPL 模型所在的私有库。
+library_root: /path/to/private-library
+# 由 imu-sim pipeline make-amass-catalog 生成的目录，包含 catalog.json 与来源计划。
+catalog: /path/to/source-catalog
+# 代码仓库用于解析传感器 layout/profile 相对路径。
+checkout: ../..
+# 每次正式重建使用全新的输出目录；同一目录只用于同配置断点恢复。
+output: /path/to/production-job-output
+policy: ../../configs/quality/machine-review-v1.json
+
+# 传感器并行进程数。先用 1、2、4 做真实来源吞吐测试，再确定常用值。
+sensor_workers: 2
+# 空列表处理目录中的所有计划来源；测试可列出 ACCAD、GRAB、SOMA 等。
+sources: []
+# null 表示处理每个来源的全部片段；小规模测试可设为 4。
+clips_per_source: null
+
+publication:
+  # local：只生成本地候选；dev：独立测试前缀；prod：正式前缀。
+  target: dev
+  # none / local / gcs。云端目标使用 gcs；本地合同测试可用 local。
+  backend: gcs
+  bucket: your-gcs-bucket
+  project: your-google-cloud-project
+  root: null
+  # dev 必填；prod 和 local 必须为 null。正式前缀固定为 synthetic-motion/prod/v1。
+  run_id: example-run-YYYYMMDD
+
+# 新任务可选：上传与运动/IMU 计算分离。绝不能向正在运行的旧任务
+# 原地加入此配置，因为输出目录绑定整份冻结配置哈希。
+# upload:
+#   mode: durable
+#   workers: 4
+#   max_pending_bytes: 68719476736  # 64 GiB 本地待上传积压上限
+#   min_free_bytes: 107374182400   # 保留至少 100 GiB 空盘

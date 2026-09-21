@@ -1,0 +1,7 @@
+{
+  "schema": "imu_motion_simulator.calibration_profile.v1",
+  "profile_id": "example-calibrated-v1",
+  "description": "Deterministic engineering example; replace with a measured device profile before scientific comparison",
+  "acceleration": {"bias": [0.03, -0.02, 0.04], "scale": [1.002, 0.998, 1.001], "noise_std": [0.02, 0.02, 0.02]},
+  "angular_velocity": {"bias": [0.001, -0.001, 0.002], "scale": [1.0, 1.0, 1.0], "noise_std": [0.001, 0.001, 0.001]}
+}

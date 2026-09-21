@@ -1,0 +1,13 @@
+{
+  "schema": "imu_motion_simulator.sensor_layout.v1",
+  "layout_id": "lara-5",
+  "description": "Five-site LARa comparison placeholder; promote only after source metadata mapping",
+  "status": "provisional",
+  "mounts": [
+    {"id": "left-wrist", "joint": "left_wrist", "position_joint_m": [0.0, 0.0, 0.0], "quaternion_joint_from_sensor_wxyz": [1.0, 0.0, 0.0, 0.0]},
+    {"id": "right-wrist", "joint": "right_wrist", "position_joint_m": [0.0, 0.0, 0.0], "quaternion_joint_from_sensor_wxyz": [1.0, 0.0, 0.0, 0.0]},
+    {"id": "left-ankle", "joint": "left_ankle", "position_joint_m": [0.0, 0.0, 0.06], "quaternion_joint_from_sensor_wxyz": [1.0, 0.0, 0.0, 0.0]},
+    {"id": "right-ankle", "joint": "right_ankle", "position_joint_m": [0.0, 0.0, 0.06], "quaternion_joint_from_sensor_wxyz": [1.0, 0.0, 0.0, 0.0]},
+    {"id": "pelvis", "joint": "pelvis", "position_joint_m": [-0.06, 0.0, 0.0], "quaternion_joint_from_sensor_wxyz": [1.0, 0.0, 0.0, 0.0]}
+  ]
+}

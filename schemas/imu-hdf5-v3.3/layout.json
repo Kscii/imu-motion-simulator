@@ -1,0 +1,82 @@
+{
+  "description_format": "hdf5-layout-description-v1",
+  "status": "design-frozen-runtime-subset-d35",
+  "contract": "docs/contracts/imu-hdf5-v3.3.md",
+  "imu_schema_version": "3.3.0",
+  "artifact_profile": "imu_dataset",
+  "required_root_objects": ["samples", "sequences", "annotations", "labels"],
+  "optional_root_objects": ["media", "replay", "assets", "provenance"],
+  "required_root_attributes": ["imu_schema_version", "artifact_profile", "artifact_id", "dataset_id", "sampling_rate_hz", "axis_frame", "hdf5_compatibility", "evaluation_role", "feature_columns", "sequence_count", "sample_count", "annotation_count", "logical_content_sha256"],
+  "core": {
+    "sampling_rate_hz": 25.0,
+    "axis_frame": "sensor_local",
+    "hdf5_compatibility": "1.14",
+    "samples": {
+      "dtype": "float32",
+      "shape": ["N", 6],
+      "columns": ["acceleration_x_mps2", "acceleration_y_mps2", "acceleration_z_mps2", "angular_velocity_x_rad_s", "angular_velocity_y_rad_s", "angular_velocity_z_rad_s"],
+      "units": ["m/s^2", "m/s^2", "m/s^2", "rad/s", "rad/s", "rad/s"]
+    },
+    "sequences": {
+      "shape": ["S"],
+      "fields": [
+        ["sample_start", "int64"], ["sample_stop", "int64"],
+        ["source_file", "UTF-8"], ["participant_id", "UTF-8"],
+        ["recording_id", "UTF-8"], ["body_location", "UTF-8"],
+        ["activity_code", "UTF-8"], ["is_fall", "bool"],
+        ["supervision_kind", "UTF-8"], ["source_sampling_rate_hz", "float64"]
+      ]
+    },
+    "annotations": {
+      "shape": ["A"],
+      "fields": [
+        ["sequence_index", "int32"], ["kind", "UTF-8"],
+        ["start_sample", "int64"], ["stop_sample", "int64"], ["code", "UTF-8"]
+      ]
+    }
+  },
+  "labels": {
+    "catalog": {
+      "fields": [["taxonomy_id", "UTF-8"], ["taxonomy_version", "UTF-8"], ["code", "UTF-8"], ["name", "UTF-8"], ["is_fall", "bool"], ["active", "bool"]]
+    },
+    "sequence_versions": {
+      "fields": [["sequence_index", "int32"], ["taxonomy_id", "UTF-8"], ["taxonomy_version", "UTF-8"]],
+      "coverage": "exactly-all-sequences"
+    }
+  },
+  "media": {
+    "index": {
+      "fields": [["sequence_index", "int32"], ["byte_length", "int64"], ["file_offset", "int64"], ["sha256", "UTF-8"], ["content_type", "UTF-8"], ["container", "UTF-8"], ["media_duration_ns", "int64"], ["sample_zero_recording_time_ns", "int64"], ["sample_zero_media_time_ns", "int64"]],
+      "coverage": "sorted-unique-subset-of-sequences"
+    },
+    "timing": {"dtype": "int64", "shape": ["F", 2], "columns": ["recording_time_ns", "media_time_ns"]},
+    "videos": {"dtype": "uint8", "shape": ["byte_length"], "storage": "contiguous-uncompressed"}
+  },
+  "replay": {
+    "index": {
+      "fields": [["sequence_index", "int32"], ["record_id", "UTF-8"], ["sample_zero_replay_time_ns", "int64"]],
+      "coverage": "sorted-unique-subset-of-sequences"
+    },
+    "physical_record_arrays": {
+      "time_ns": {"dtype": "int64", "shape": ["F"]},
+      "root_position_m": {"dtype": "float32", "shape": ["F", 3]},
+      "root_quaternion_wxyz": {"dtype": "float32", "shape": ["F", 4]},
+      "joint_position": {"dtype": "float32", "shape": ["F", "J"]},
+      "object_pose_world": {"dtype": "float32", "shape": ["F", "O", 7], "required_when": "O>0"}
+    },
+    "kinematic_record_arrays": {
+      "time_ns": {"dtype": "int64", "shape": ["F"]},
+      "root_position_m": {"dtype": "float32", "shape": ["F", 3]},
+      "root_quaternion_wxyz": {"dtype": "float32", "shape": ["F", 4]},
+      "joint_local_quaternion_wxyz": {"dtype": "float32", "shape": ["F", 52, 4]},
+      "betas": {"dtype": "float32", "shape": [16]},
+      "dmpls": {"dtype": "float32", "shape": ["F", 8]}
+    },
+    "rate_policy": "preserve-original-source-or-physics-frames",
+    "assets_policy": "self-contained-hash-deduplicated",
+    "sample_period_ns": 40000000
+  },
+  "filename_policy": "advisory-only",
+  "reader_transition": ["3.2.0-and-3.3.0", "3.3.0-only-after-migration"],
+  "not_a_runtime_validator": true
+}

@@ -1,0 +1,14 @@
+{
+  "schema": "imu_motion_simulator.sensor_layout.v1",
+  "layout_id": "chest-1",
+  "description": "Single sternum-area engineering reference mount on the SMPL+H -Y front surface; physical placement remains a calibration variable",
+  "status": "production",
+  "mounts": [
+    {
+      "id": "chest",
+      "joint": "spine3",
+      "position_joint_m": [0.0, -0.16, 0.0],
+      "quaternion_joint_from_sensor_wxyz": [1.0, 0.0, 0.0, 0.0]
+    }
+  ]
+}

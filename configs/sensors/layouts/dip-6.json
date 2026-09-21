@@ -1,0 +1,14 @@
+{
+  "schema": "imu_motion_simulator.sensor_layout.v1",
+  "layout_id": "dip-6",
+  "description": "Six-site DIP-IMU comparison layout; exact device transforms remain provisional",
+  "status": "provisional",
+  "mounts": [
+    {"id": "left-wrist", "joint": "left_wrist", "position_joint_m": [0.0, 0.0, 0.0], "quaternion_joint_from_sensor_wxyz": [1.0, 0.0, 0.0, 0.0]},
+    {"id": "right-wrist", "joint": "right_wrist", "position_joint_m": [0.0, 0.0, 0.0], "quaternion_joint_from_sensor_wxyz": [1.0, 0.0, 0.0, 0.0]},
+    {"id": "left-lower-leg", "joint": "left_ankle", "position_joint_m": [0.0, 0.0, 0.12], "quaternion_joint_from_sensor_wxyz": [1.0, 0.0, 0.0, 0.0]},
+    {"id": "right-lower-leg", "joint": "right_ankle", "position_joint_m": [0.0, 0.0, 0.12], "quaternion_joint_from_sensor_wxyz": [1.0, 0.0, 0.0, 0.0]},
+    {"id": "head", "joint": "head", "position_joint_m": [0.0, 0.0, 0.08], "quaternion_joint_from_sensor_wxyz": [1.0, 0.0, 0.0, 0.0]},
+    {"id": "back", "joint": "spine3", "position_joint_m": [-0.08, 0.0, 0.0], "quaternion_joint_from_sensor_wxyz": [1.0, 0.0, 0.0, 0.0]}
+  ]
+}

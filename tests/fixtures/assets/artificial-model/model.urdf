@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<robot name="artificial-contract-fixture">
+  <link name="base"/>
+  <link name="limb"/>
+  <link name="tip"/>
+  <joint name="fixture_joint" type="revolute">
+    <parent link="base"/>
+    <child link="limb"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-1" upper="1" effort="1" velocity="1"/>
+  </joint>
+  <joint name="fixture_tip_joint" type="revolute">
+    <parent link="limb"/>
+    <child link="tip"/>
+    <origin xyz="0 0 1" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-1" upper="1" effort="1" velocity="1"/>
+  </joint>
+</robot>

@@ -1,0 +1,14 @@
+{
+  "format_version": "1.0.0",
+  "model_revision": "r1",
+  "files": [
+    {
+      "path": "model.urdf",
+      "sha256": "822f8a9f637da7fa021049b122e01574f8210a5113a16177cb2326ae0be967a2"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "424c3da418fa0deb8c60f598dd2d62d9cb25bd9085b8b404aa523539531eec4a"
+    }
+  ]
+}

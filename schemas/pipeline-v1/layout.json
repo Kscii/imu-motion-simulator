@@ -1,0 +1,36 @@
+{
+  "description_format": "hdf5-layout-description-v1",
+  "status": "kinematic-production-v1",
+  "contract": "docs/contracts/kinematic-v2.md",
+  "ims_schema_version": "1.0.0",
+  "artifact_kinds": ["source", "motion", "reference", "episode", "sensors"],
+  "required_root_attributes": ["ims_schema_version", "artifact_kind", "artifact_id"],
+  "required_root_objects": ["metadata", "data"],
+  "metadata_fields": ["producer", "created_at_utc", "parents", "completion", "coordinates", "clocks", "arrays", "resolved_config", "provenance", "kind_metadata"],
+  "coordinates": {"length_unit": "m", "angle_unit": "rad", "time_unit": "s", "world": "RH-Xforward-Yleft-Zup", "quaternion": "wxyz-active"},
+  "motion_v2": {
+    "model_family": "smplh",
+    "joint_count": 52,
+    "arrays": {
+      "time_ns": ["T"],
+      "root_position_m": ["T", 3],
+      "root_quaternion_wxyz": ["T", 4],
+      "joint_local_quaternion_wxyz": ["T", 52, 4],
+      "betas": [16],
+      "dmpls": ["T", 8],
+      "valid": ["T"]
+    }
+  },
+  "sensors_v2": {
+    "arrays": {
+      "time_ns": ["N"],
+      "specific_force_m_s2": ["N", "M", 3],
+      "angular_velocity_rad_s": ["N", "M", 3],
+      "valid": ["N", "M"]
+    },
+    "layout_policy": "explicit-named-layout",
+    "variants": ["ideal", "calibrated"]
+  },
+  "legacy_extension_kinds": ["reference", "episode"],
+  "not_a_runtime_validator": true
+}

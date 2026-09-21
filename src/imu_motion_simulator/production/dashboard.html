@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>合成 IMU 生产控制面板</title>
+  <style>
+    :root{color-scheme:dark;font:15px/1.5 system-ui,sans-serif;background:#0b1422;color:#e7efff}
+    *{box-sizing:border-box}body{margin:0;padding:20px 28px;max-width:1700px;margin-inline:auto}
+    header,.row{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+    h1{font-size:25px;margin:0}h2{font-size:18px;margin:0 0 12px}h3{font-size:15px;margin:0 0 8px}
+    p{margin:6px 0;color:#aebdd6}.muted,small{color:#91a3be}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:14px;margin-top:16px}
+    .card{background:#142237;border:1px solid #2a405d;border-radius:12px;padding:17px;min-width:0}
+    .wide{grid-column:1/-1}.grid>.card:not(.wide){grid-column:span 2}.metric{font-size:28px;font-weight:700;color:#f3f8ff}
+    .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:14px;margin:14px 0}
+    .metrics span{display:block;color:#aebdd6;font-size:13px}.metrics strong{display:block;font-size:20px}
+    .badge{border-radius:6px;padding:3px 8px;background:#244265;color:#cbe3ff;font-size:13px}
+    .badge.ok{background:#143f30;color:#9df5c2}.badge.bad{background:#5a282d;color:#ffd2d5}
+    button{background:#285fd0;color:#fff;border:1px solid #4c82e7;border-radius:7px;padding:9px 14px;cursor:pointer}
+    button:disabled{opacity:.48;cursor:wait}button.secondary{background:#1d304b;border-color:#395775}
+    table{width:100%;border-collapse:collapse;text-align:left}td,th{padding:8px 10px;border-bottom:1px solid #2a405d;vertical-align:top}th{color:#aebdd6;font-weight:500}
+    code{overflow-wrap:anywhere;color:#d4e4ff}.warning{color:#ffd78a}.error{color:#ffb6b8;overflow-wrap:anywhere}
+    pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:300px;overflow:auto;background:#0c182a;padding:10px;border-radius:6px}
+    .message{min-height:24px}details{margin-top:10px}summary{cursor:pointer;color:#aac8ff}
+    @media(max-width:750px){body{padding:12px}.card{padding:13px}.grid>.card:not(.wide){grid-column:1/-1}td,th{padding:6px 4px}}
+  </style>
+</head>
+<body>
+  <header><div><h1>合成 IMU 生产控制面板</h1><p>本机状态监控 · 每 15 秒更新 · 不会自动启动、暂停或修改正在运行的任务</p></div><button class="secondary" id="refresh">立即刷新</button></header>
+  <p id="message" class="message" role="status"></p>
+  <div class="grid">
+    <section class="card wide"><div class="row"><h2>生产任务</h2><small id="updated"></small></div><div id="jobs"></div></section>
+    <section class="card"><h2>服务与网络</h2><div id="services"></div><div id="wifi"></div></section>
+    <section class="card"><h2>全量审计与核心 H5</h2><div id="audit"></div><p>部分版只冻结点击时已完整发布的候选；机器 QA 通过不等于人工审核通过。全量版仍由独立审计完成后自动导出。</p><button id="export">创建当前部分版</button><p id="export-state"></p></section>
+    <section class="card wide"><h2>最近异常与事件</h2><div id="events"></div></section>
+  </div>
+  <script id="initial-state" type="application/json"><!--INITIAL_STATE--></script>
+  <script>
+    const $=id=>document.getElementById(id);
+    const node=(tag,text,cls)=>{const e=document.createElement(tag);e.textContent=String(text??'—');if(cls)e.className=cls;return e};
+    const bytes=n=>n==null?'—':n>=1073741824?(n/1073741824).toFixed(2)+' GiB':(n/1048576).toFixed(1)+' MiB';
+    const date=s=>s?new Date(s).toLocaleString():'—';
+    const badge=(s)=>node('span',s,'badge '+(['active','running','complete','connected'].includes(s)?'ok':['failed','inactive','disconnected'].includes(s)?'bad':''));
+    const line=(root,...children)=>{const p=document.createElement('p');children.forEach(c=>p.append(c));root.append(p)};
+    const metric=(root,label,value)=>{const d=document.createElement('div');d.append(node('strong',value),node('span',label));root.append(d)};
+    const error=why=>{$('message').textContent=String(why);$('message').className='message error'};
+    function jobCard(job,index){
+      const card=document.createElement('section');card.className='card';
+      card.append(node('h3','任务 '+(index+1)+' · '+(job.target||'未知')+' · '+job.config.split('/').pop()));
+      const path=document.createElement('details');path.append(node('summary','配置路径'),node('code',job.config));card.append(path);
+      if(job.error){line(card,node('span',job.error,'error'));return card}
+      if(!job.ledger_exists){line(card,node('span','账本尚未创建','warning'));return card}
+      line(card,badge(job.status),node('span',' 控制：'+job.control+' · 最近成功 '+date(job.latest_published_at_utc)));
+      line(card,node('span',job.upload_mode==='durable'?'上传模式：本地持久队列':'上传模式：同步；网络失败条目需任务重试','muted'));
+      const m=document.createElement('div');m.className='metrics';
+      for(const [key,label] of [['published','已发布'],['excluded','已排除'],['failed','失败'],['pending-publish','待上传']])metric(m,label,job.counts[key]||0);
+      metric(m,'近 10 分钟已发布',job.published_last_10m||0);metric(m,'待上传数据',bytes(job.upload_queue?.bytes));metric(m,'阻塞待处理',job.upload_queue?.blocked||0);
+      metric(m,'待上传重试',job.upload_queue?.retries||0);metric(m,'本地可用空间',bytes(job.disk_free_bytes));card.append(m);
+      if(job.upload_mode==='durable'){const t=document.createElement('div');t.className='metrics';metric(t,'GCS SDK 调用',job.upload_transport?.sdk_calls||0);metric(t,'SDK 调用耗时',((job.upload_transport?.sdk_seconds||0)).toFixed(1)+' s');metric(t,'共享文件缓存命中',job.upload_transport?.cache_hits||0);metric(t,'对象已存在（预期）',job.upload_transport?.precondition_exists||0);metric(t,'SDK 调用错误',job.upload_transport?.upload_errors||0);metric(t,'尝试上传字节',bytes(job.upload_transport?.attempted_upload_bytes||0));card.append(t);line(card,node('small','SDK 调用并非 HTTP 底层请求；尝试上传字节并非实际网卡流量。'))}
+      if(job.upload_transport?.worker_claims){const t=document.createElement('div');t.className='metrics';metric(t,'上传任务领取',job.upload_transport.worker_claims);metric(t,'上传工作累计',job.upload_transport.worker_busy_s?.toFixed(1)+' s');metric(t,'上传空闲累计',job.upload_transport.worker_idle_s?.toFixed(1)+' s');for(const [key,label] of [['upload_from_filename','文件写入'],['upload_from_string','JSON 写入'],['get_blob','远端校验']]){metric(t,label+'调用',job.upload_transport['sdk_'+key+'_calls']||0);metric(t,label+'耗时',(job.upload_transport['sdk_'+key+'_seconds']||0).toFixed(1)+' s')}card.append(t)}
+      if(job.upload_queue?.oldest_at_utc)line(card,node('span','最早待上传：'+date(job.upload_queue.oldest_at_utc),'warning'));
+      if(job.upload_errors?.length){const d=document.createElement('details');d.append(node('summary','上传重试错误 '+job.upload_errors.length+' 条'));for(const row of job.upload_errors)line(d,node('code',row.clip_id+' · '+row.attempts+' 次 · '+row.last_error,'error'));card.append(d)}
+      if(job.phases?.length){const d=document.createElement('details');d.append(node('summary','阶段计时（为性能分析采集）'));const t=document.createElement('table');t.innerHTML='<tr><th>阶段</th><th>样本</th><th>平均秒</th><th>累计秒</th></tr>';for(const row of job.phases){const tr=document.createElement('tr');for(const value of [row.phase,row.count,row.mean_s?.toFixed(2),row.total_s?.toFixed(1)])tr.append(node('td',value));t.append(tr)}d.append(t);card.append(d)}
+      if(job.source_phases?.length){const d=document.createElement('details');d.append(node('summary','来源归档读取计时'));const t=document.createElement('table');t.innerHTML='<tr><th>来源</th><th>阶段</th><th>样本</th><th>累计秒</th></tr>';for(const row of job.source_phases){const tr=document.createElement('tr');for(const value of [row.source_dataset,row.phase,row.samples,row.elapsed_s?.toFixed(1)])tr.append(node('td',value));t.append(tr)}d.append(t);card.append(d)}
+      return card;
+    }
+    function render(data){
+      $('updated').textContent='更新于 '+date(data.updated_at_utc);
+      $('jobs').replaceChildren(...data.jobs.map(jobCard));
+      const services=$('services');services.replaceChildren();
+      for(const service of data.services)line(services,badge(service.active),node('span',' '+service.name+' · '+service.sub));
+      $('wifi').replaceChildren(node('h3','Wi-Fi'),node('p',data.wifi.interfaces.join(' · ')||data.wifi.error||'未检测到 Wi-Fi 连接'));
+      const audit=$('audit');audit.replaceChildren();
+      line(audit,badge(data.audit?.phase||'未配置审计报告'));
+      if(data.audit?.error)line(audit,node('span',data.audit.error,'error'));
+      const state=data.export||{};$('export-state').textContent=state.status==='running'?'正在生成并上传；页面会持续显示进度状态':state.status==='failed'?'导出失败：'+state.error:state.status==='complete'?'已创建 '+state.result?.export_id+' · '+state.result?.candidate_count+' 条 · '+((state.result?.duration_s||0)/3600).toFixed(2)+' 小时':'尚未手动创建本轮部分版';
+      $('export').disabled=state.status==='running';
+      const events=$('events');events.replaceChildren();
+      for(const [index,job] of data.jobs.entries()){
+        if(!job.ledger_exists)continue;
+        const d=document.createElement('details');d.open=index===0;d.append(node('summary','任务 '+(index+1)+' · '+(job.recent_errors?.length||0)+' 条最近错误'));
+        for(const row of job.recent_errors||[])line(d,node('code',date(row.updated_at_utc)+' · '+row.source_dataset+' · '+row.clip_id+' · '+row.error,'error'));
+        if(!job.recent_errors?.length)line(d,node('span','当前没有有错误信息的条目'));
+        const eventsDetail=document.createElement('details');eventsDetail.append(node('summary','最近事件'));
+        const pre=node('pre',JSON.stringify(job.recent_events||[],null,2));eventsDetail.append(pre);d.append(eventsDetail);events.append(d);
+      }
+    }
+    async function refresh(){try{const response=await fetch('/api/v1/dashboard',{cache:'no-store'});if(!response.ok)throw Error('HTTP '+response.status);render(await response.json());$('message').textContent='';$('message').className='message'}catch(why){error(why)}}
+    $('refresh').onclick=refresh;
+    $('export').onclick=async()=>{if(!confirm('创建当前已发布候选的不可变部分版核心 HDF5 3.3？'))return;try{const response=await fetch('/api/v1/export-core',{method:'POST',headers:{'X-IMU-Dashboard':'export-core'}});const body=await response.json();if(!response.ok)throw Error(body.detail||'HTTP '+response.status);await refresh()}catch(why){error(why)}};
+    render(JSON.parse($('initial-state').textContent));setInterval(refresh,15000);
+  </script>
+</body>
+</html>

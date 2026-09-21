@@ -1,0 +1,7 @@
+{
+  "schema": "imu_motion_simulator.upload_runtime.v1",
+  "mode": "durable",
+  "workers": 8,
+  "max_pending_bytes": 68719476736,
+  "min_free_bytes": 107374182400
+}

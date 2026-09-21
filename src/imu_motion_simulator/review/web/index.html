@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>IMU Motion Review</title>
+  <style>
+    html,body{margin:0;height:100%;overflow:hidden;background:#111827;color:#e5e7eb;font:14px system-ui}
+    #view{position:absolute;inset:0} #panel{position:absolute;left:16px;bottom:16px;width:360px;background:#111827e8;border:1px solid #374151;border-radius:10px;padding:12px}
+    #plot{width:100%;height:90px;background:#030712;border-radius:5px} .row{display:flex;gap:8px;align-items:center;margin-top:8px} button,input,textarea{background:#1f2937;color:#f9fafb;border:1px solid #4b5563;border-radius:5px;padding:6px} button{cursor:pointer} input[type=range]{flex:1} textarea{box-sizing:border-box;width:100%;height:62px;resize:vertical} #status{color:#fbbf24}
+  </style>
+</head>
+<body><div id="view"></div><div id="panel">
+  <div><b>SMPL+H kinematic review</b> · <span id="status">loading</span></div>
+  <div class="row"><button id="previous" title="上一源帧">◀</button><button id="play">▶</button><button id="next" title="下一源帧">▶|</button><input id="time" type="range" min="0" max="1" step="1" value="0"><span id="clock">source 0 · 0.000s · 1×</span></div>
+  <canvas id="plot" width="720" height="180"></canvas>
+  <div class="row"><textarea id="labels" aria-label="labels JSON" placeholder='labels JSON，例如 [{"code":"walk"}]'></textarea></div>
+  <div class="row"><input id="reviewer" placeholder="reviewer"><input id="reason" placeholder="reason"></div>
+  <div class="row"><button data-decision="accepted" disabled>接受</button><button data-decision="rejected" disabled>拒绝</button><span id="review-mode">只读观察 · 拖动画面旋转，滚轮缩放</span></div>
+</div><script type="module" src="./app.js"></script></body></html>
